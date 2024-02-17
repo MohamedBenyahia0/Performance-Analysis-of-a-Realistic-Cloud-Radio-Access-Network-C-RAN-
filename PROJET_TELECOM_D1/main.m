@@ -13,7 +13,7 @@ k2=31-10;
 m2=ones(1,k2);
 c2=encoder(m2,g2);
 
-c2_prim=c1;
+c2_prim=c2;
 c2_prim(3)=c2_prim(3)+1;
 c2_prim(6)=c2_prim(6)+1;
 m2_hat=decoder_2errors(c2_prim,g2);
