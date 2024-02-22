@@ -20,8 +20,8 @@ m2_hat=decoder_2errors(c2_prim,g2);
 
 
 %% %%%%%%%%%% plot BER versus Eb/No %%%%%%%%
-N=8000;
-[SNR_bit,BER0] = BERvsSNR_Uncoded(N);
+Ns=8000;
+[SNR_bit,BER0] = BERvsSNR_Uncoded(Ns);
 % [SNR_bit,BER1] = BERvsSNR_Code1(N);
 % [SNR_bit,BER2] = BERvsSNR_Code2(N);
 semilogy(SNR_bit,BER0)
