@@ -7,15 +7,28 @@ c1_prim=c1;
 c1_prim(4)=c1_prim(4)+1;
 m1_hat=decoder_1error(c1_prim,g1);
 
-%%%%%%%%%%%%%
+%% %%%%%%%%%%%
 g2=[1,0,0,1,0,1,1,0,1,1,1];%g=x^10+x^9+x^8+x^6+x^5+x^3+1
 k2=31-10;
 m2=ones(1,k2);
 c2=encoder(m2,g2);
 
-c2_prim=c1;
+c2_prim=c2;
 c2_prim(3)=c2_prim(3)+1;
 c2_prim(6)=c2_prim(6)+1;
 m2_hat=decoder_2errors(c2_prim,g2);
 
 
+%% %%%%%%%%%% plot BER versus Eb/No %%%%%%%%
+N=8000;
+[SNR_bit,BER0] = BERvsSNR_Uncoded(N);
+% [SNR_bit,BER1] = BERvsSNR_Code1(N);
+% [SNR_bit,BER2] = BERvsSNR_Code2(N);
+semilogy(SNR_bit,BER0)
+grid
+xlabel('Eb/No (in dB)')
+ylabel('BER')
+% hold on
+% semilogy(SNR_bit,BER1)
+% semilogy(SNR_bit,BER2)
+% hold off
