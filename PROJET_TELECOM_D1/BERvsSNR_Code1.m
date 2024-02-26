@@ -1,4 +1,4 @@
-function [SNR_bit,BER1] = BERvsSNR_Code1(N)
+function [SNR_bit,BER1] = BERvsSNR_Code1(N,k1,g1)
 SNR_bit=[0:10]; %% Eb/No en dB
 BER1 = zeros(1,length(SNR_bit));
 Energy_symbol = 1;

@@ -1,4 +1,4 @@
-function [SNR_bit,BER2] = BERvsSNR_Code2(N)
+function [SNR_bit,BER2] = BERvsSNR_Code2(N,k2,g2)
 
 SNR_bit=[0:10]; %% Eb/No en dB
 
