@@ -1,3 +1,4 @@
+function [H1,H2,H3] =plot_channel()
 tau = [0,0.5,1,1.5,2];
 A_1 = [1,0.1,0.1,0.1,0.1];
 A_2 = [1,0.8,0.6,0.4,0.2];
@@ -8,13 +9,13 @@ m = -L:1:L;
 N=100;
 h1 = filtre_canal(m,A_1,tau,Ts,L);
 h1_norm = h1/norm(h1);
-
+H1=toeplitzMatrix(h1_norm,N,L);
 h2 = filtre_canal(m,A_2,tau,Ts,L);
 h2_norm = h2/norm(h2);
-
+H2=toeplitzMatrix(h2_norm,N,L);
 h3 = filtre_canal(m,A_3,tau,Ts,L);
 h3_norm = h3/norm(h3);
-
+H3=toeplitzMatrix(h3_norm,N,L);
 
 plot(m,h1_norm);
 title('Channels L=6 N=100');

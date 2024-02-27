@@ -15,5 +15,6 @@ function c = encoder(m, g)
     m_c=new_val;
 
     c=cat(2,m_c,m);% On concatene m_c et m 
+    
 
     
