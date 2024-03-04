@@ -32,9 +32,9 @@ Nb2=k2*100;
 [SNR_bit,BER2] = BERvsSNR_Code2(Nb2,k2,g2,H0,"threshold detector");
 
 EbNo=10.^(SNR_bit/10);
-Pb0=erfc(sqrt(2*EbNo));
-Pb1=erfc(sqrt(2*EbNo*rate1)).^dmin1;
-Pb2=erfc(sqrt(EbNo*rate2)).^dmin2;
+Pb0=0.5*erfc(sqrt(EbNo));
+Pb1=0.5*erfc(sqrt(EbNo*rate1)).^dmin1;
+Pb2=0.5*erfc(sqrt(EbNo*rate2)).^dmin2;
 figure();
 grid
 
