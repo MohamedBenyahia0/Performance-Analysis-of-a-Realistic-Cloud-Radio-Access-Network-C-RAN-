@@ -33,7 +33,7 @@ end
 Fc                = 2.4e9;       % Central frequency of the band
 BW                = 20e6;        % Considered bandwidth of the system
 lambda            = c_light/Fc;  % The wavelength
-alpha             = 2;           % The path loss exponent =2 for the free space
+alpha             = 1.5;           % The path loss exponent =2 for the free space
 Pt                = 20;          % transmitted power in dBm
 T                 = 290;         % Temperature of the system
 ThermNoise_dBm    = 10*log10(k*T*BW/1e-3); % Therm Noise power in dBm at the receiver input

@@ -1,4 +1,4 @@
-function [DigOutput] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTimeFs)
+function [DigOutput,PowerCons] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTimeFs)
     %ADC - Implements an AMS Analog to Digital converter 
     %
     % Syntax:  [DigOutput] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTimeFs)
@@ -29,7 +29,7 @@ function [DigOutput] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTime
     %------------- BEGIN CODE --------------
 
     % TODO : check imaginary part
-    
+    PowerCons=10^(-13)*adcSamplingRate*2^Nbits;
     ctOSR = continuousTimeFs/adcSamplingRate;
     if rem(continuousTimeFs,adcSamplingRate)~=0
         error('TELECOM205:ADC:ctOSR','"adcSamplingRate" should divide "continuousTimeFs"')

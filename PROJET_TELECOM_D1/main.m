@@ -61,24 +61,29 @@ legend('Uncoded','Code BCH 1','Code BCH 2')
 hold off
 
 %% %%%%%%%%%% plot BER versus Eb/No for uncoded BPSK with 4 channels%%%%%%%%
-Nb0=3000;
+Nb0=10000;
 [SNR_bit,BER_0_ZF] = BERvsSNR_Uncoded(Nb0,H0,'ZF','PSK',2,0,20,2);
 [SNR_bit,BER_0_DF] = BERvsSNR_Uncoded(Nb0,H0,'DF','PSK',2,0,20,2);
+[SNR_bit,BER_0_Thresh] = BERvsSNR_Uncoded(Nb0,H0,'thresh','PSK',2,0,20,2);
 [SNR_bit,BER_1_ZF] = BERvsSNR_Uncoded(Nb0,H1,'ZF','PSK',2,0,20,2);
 [SNR_bit,BER_1_DF] = BERvsSNR_Uncoded(Nb0,H1,'DF','PSK',2,0,20,2);
+[SNR_bit,BER_1_Thresh] = BERvsSNR_Uncoded(Nb0,H1,'thresh','PSK',2,0,20,2);
 [SNR_bit,BER_2_ZF] = BERvsSNR_Uncoded(Nb0,H2,"ZF",'PSK',2,0,20,2);
 [SNR_bit,BER_2_DF] = BERvsSNR_Uncoded(Nb0,H2,"DF",'PSK',2,0,20,2);
+[SNR_bit,BER_2_Thresh] = BERvsSNR_Uncoded(Nb0,H2,"thresh",'PSK',2,0,20,2);
 [SNR_bit,BER_3_ZF] = BERvsSNR_Uncoded(Nb0,H3,'ZF','PSK',2,0,20,2);
 [SNR_bit,BER_3_DF] = BERvsSNR_Uncoded(Nb0,H3,'DF','PSK',2,0,20,2);
+[SNR_bit,BER_3_Thresh] = BERvsSNR_Uncoded(Nb0,H3,'thresh','PSK',2,0,20,2);
 figure();
 grid
 semilogy(SNR_bit,BER_0_ZF);
 hold on
 semilogy(SNR_bit,BER_0_DF)
+semilogy(SNR_bit,BER_0_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded BPSK AWGN');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -86,10 +91,11 @@ grid
 semilogy(SNR_bit,BER_1_ZF);
 hold on
 semilogy(SNR_bit,BER_1_DF)
+semilogy(SNR_bit,BER_1_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded BPSK Channel 1');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -97,10 +103,11 @@ grid
 semilogy(SNR_bit,BER_2_ZF);
 hold on
 semilogy(SNR_bit,BER_2_DF)
+semilogy(SNR_bit,BER_2_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded BPSK Channel 2');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -108,31 +115,37 @@ grid
 semilogy(SNR_bit,BER_3_ZF);
 hold on
 semilogy(SNR_bit,BER_3_DF)
+semilogy(SNR_bit,BER_3_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded BPSK Channel 3');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 %% %%%%%%%%%% plot BER versus Eb/No for uncoded 8-QAM with 4 channels%%%%%%%%
-Nb0=3000;
+Nb0=10000;
 [SNR_bit,BER_0_ZF] = BERvsSNR_Uncoded(Nb0,H0,'ZF','QAM',8,0,30,3);
 [SNR_bit,BER_0_DF] = BERvsSNR_Uncoded(Nb0,H0,'DF','QAM',8,0,30,3);
+[SNR_bit,BER_0_Thresh] = BERvsSNR_Uncoded(Nb0,H0,'thresh','QAM',8,0,30,3);
 [SNR_bit,BER_1_ZF] = BERvsSNR_Uncoded(Nb0,H1,'ZF','QAM',8,0,30,3);
 [SNR_bit,BER_1_DF] = BERvsSNR_Uncoded(Nb0,H1,'DF','QAM',8,0,30,3);
+[SNR_bit,BER_1_Thresh] = BERvsSNR_Uncoded(Nb0,H1,'thresh','QAM',8,0,30,3);
 [SNR_bit,BER_2_ZF] = BERvsSNR_Uncoded(Nb0,H2,"ZF",'QAM',8,0,30,3);
 [SNR_bit,BER_2_DF] = BERvsSNR_Uncoded(Nb0,H2,"DF",'QAM',8,0,30,3);
+[SNR_bit,BER_2_Thresh] = BERvsSNR_Uncoded(Nb0,H2,'thresh','QAM',8,0,30,3);
 [SNR_bit,BER_3_ZF] = BERvsSNR_Uncoded(Nb0,H3,'ZF','QAM',8,0,30,3);
 [SNR_bit,BER_3_DF] = BERvsSNR_Uncoded(Nb0,H3,'DF','QAM',8,0,30,3);
+[SNR_bit,BER_3_Thresh] = BERvsSNR_Uncoded(Nb0,H3,'thresh','QAM',8,0,30,3);
 figure();
 grid
 semilogy(SNR_bit,BER_0_ZF);
 hold on
 semilogy(SNR_bit,BER_0_DF)
+semilogy(SNR_bit,BER_0_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 8-QAM AWGN');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -140,10 +153,11 @@ grid
 semilogy(SNR_bit,BER_1_ZF);
 hold on
 semilogy(SNR_bit,BER_1_DF)
+semilogy(SNR_bit,BER_1_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 8-QAM Channel 1');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -151,10 +165,11 @@ grid
 semilogy(SNR_bit,BER_2_ZF);
 hold on
 semilogy(SNR_bit,BER_2_DF)
+semilogy(SNR_bit,BER_2_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 8-QAM Channel 2');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -162,31 +177,37 @@ grid
 semilogy(SNR_bit,BER_3_ZF);
 hold on
 semilogy(SNR_bit,BER_3_DF)
+semilogy(SNR_bit,BER_3_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 8-QAM Channel 3');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 %% %%%%%%%%%% plot BER versus Eb/No for uncoded 16-QAM with 4 channels%%%%%%%%
-Nb0=3000;
+Nb0=10000;
 [SNR_bit,BER_0_ZF] = BERvsSNR_Uncoded(Nb0,H0,'ZF','QAM',16,0,30,3);
 [SNR_bit,BER_0_DF] = BERvsSNR_Uncoded(Nb0,H0,'DF','QAM',16,0,30,3);
+[SNR_bit,BER_0_Thresh] = BERvsSNR_Uncoded(Nb0,H0,'thresh','QAM',16,0,30,3);
 [SNR_bit,BER_1_ZF] = BERvsSNR_Uncoded(Nb0,H1,'ZF','QAM',16,0,30,3);
 [SNR_bit,BER_1_DF] = BERvsSNR_Uncoded(Nb0,H1,'DF','QAM',16,0,30,3);
+[SNR_bit,BER_1_Thresh] = BERvsSNR_Uncoded(Nb0,H1,'thresh','QAM',16,0,30,3);
 [SNR_bit,BER_2_ZF] = BERvsSNR_Uncoded(Nb0,H2,"ZF",'QAM',16,0,30,3);
 [SNR_bit,BER_2_DF] = BERvsSNR_Uncoded(Nb0,H2,"DF",'QAM',16,0,30,3);
+[SNR_bit,BER_2_Thresh] = BERvsSNR_Uncoded(Nb0,H2,"thresh",'QAM',16,0,30,3);
 [SNR_bit,BER_3_ZF] = BERvsSNR_Uncoded(Nb0,H3,'ZF','QAM',16,0,30,3);
 [SNR_bit,BER_3_DF] = BERvsSNR_Uncoded(Nb0,H3,'DF','QAM',16,0,30,3);
+[SNR_bit,BER_3_Thresh] = BERvsSNR_Uncoded(Nb0,H3,'thresh','QAM',16,0,30,3);
 figure();
 grid
 semilogy(SNR_bit,BER_0_ZF);
 hold on
 semilogy(SNR_bit,BER_0_DF)
+semilogy(SNR_bit,BER_0_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 16-QAM AWGN');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -194,10 +215,11 @@ grid
 semilogy(SNR_bit,BER_1_ZF);
 hold on
 semilogy(SNR_bit,BER_1_DF)
+semilogy(SNR_bit,BER_1_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 16-QAM Channel 1');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -205,10 +227,11 @@ grid
 semilogy(SNR_bit,BER_2_ZF);
 hold on
 semilogy(SNR_bit,BER_2_DF)
+semilogy(SNR_bit,BER_2_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 16-QAM Channel 2');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off
 
 figure();
@@ -216,8 +239,9 @@ grid
 semilogy(SNR_bit,BER_3_ZF);
 hold on
 semilogy(SNR_bit,BER_3_DF)
+semilogy(SNR_bit,BER_3_Thresh)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('BER vs Eb/N0 uncoded 16-QAM Channel 3');
-legend('ZF','DF')
+legend('ZF','DF','Simple Threshold')
 hold off

@@ -177,7 +177,7 @@ carrierFreq        = Flo; % Center frequency of the transmission
 c                  = 3e8; % speed of light in vacuum
 distance           = 100; % Distance between Basestation and UE : [1.4,1.4e3] metres
 % Amplitude Attenuation in free space
-ChannelAttenuation = (c/carrierFreq./(4*pi*distance));
+ChannelAttenuation = (c/carrierFreq./(4*pi*distance))^2;
 rxSignal           = rfPASignal*ChannelAttenuation;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

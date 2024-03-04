@@ -1,4 +1,4 @@
-function [AnalogOutput] = DAC(input,Nbits,Vref,DACType,basebandFs,continuousTimeFs)
+function [AnalogOutput,PowerCons] = DAC(input,Nbits,Vref,DACType,basebandFs,continuousTimeFs)
     %DAC - Implements an AMS Digital to Analog converter 
     %
     % Syntax:  [AnalogOutput] = DAC(input,Nbits,Vref,DACType,basebandFs,continuousTimeFs)
@@ -27,6 +27,7 @@ function [AnalogOutput] = DAC(input,Nbits,Vref,DACType,basebandFs,continuousTime
     %------------- BEGIN CODE --------------
     
     % TODO : check imaginary part
+    PowerCons=10^(-13)*basebandFs*2^Nbits;
 
     ctOSR = continuousTimeFs/basebandFs;
 
@@ -54,6 +55,7 @@ function [AnalogOutput] = DAC(input,Nbits,Vref,DACType,basebandFs,continuousTime
     case 'impulse'
         AnalogOutput(1:ctOSR:end,:) = AnalogOutput_dt;
     end
+
 
 
 

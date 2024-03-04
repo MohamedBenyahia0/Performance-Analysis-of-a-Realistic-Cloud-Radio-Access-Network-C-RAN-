@@ -78,7 +78,7 @@ Input_Q   = Ain*sin(2*pi*fin(1)*t_BB+phi_0-pi/2) +Ain*sin(2*pi*fin(2)*t_BB+phi_0
 
 
 %%%%%%%%% TX section %%%%%%%%%
-TxOut = TX(Input_I',Input_Q',...            % digital baseband signal
+TxOut = TX_proj(Input_I',Input_Q',...            % digital baseband signal
             Vref_DAC,Nbits_DAC,Fs_DAC,continuousTimeSamplingRate,mode,...  % DA conversion
             Filt,Filt_NF,...% Baseband filter
             Flo,...                         % RF carrier frequency

@@ -1,4 +1,4 @@
-function [OutputI,OutputQ] = downMixer(InputRF,Flo,continuousTimeFs)
+function [OutputI,OutputQ,PowerCons] = downMixer(InputRF,Flo,continuousTimeFs)
     %downMixer - Implements an AMS/RF downmixer
     %   For sake of simplicity, in the project, mixers are ideal
     %
@@ -24,6 +24,7 @@ function [OutputI,OutputQ] = downMixer(InputRF,Flo,continuousTimeFs)
     % Website: https://c2s.telecom-paristech.fr/TODO
     % Feb. 2020
     %------------- BEGIN CODE --------------
+    PowerCons=5*10^(-12)*Flo;
 
     sigLen       = length(InputRF);
     timeInstants = (0:(sigLen-1))/continuousTimeFs;
