@@ -19,45 +19,49 @@ c2_prim=c2;
 c2_prim(3)=c2_prim(3)+1;
 c2_prim(6)=c2_prim(6)+1;
 m2_hat=decoder_2errors(c2_prim,g2);
-%% %%%%%
+%% %%%%% Display Channels
 [H1,H2,H3] =plot_channel();
 
 H0=eye(100,100);
 %% %%%%%%%%%% plot BER versus Eb/No for uncoded and both BCH codes (BPSK) with AWGN channel%%%%%%%%
-Nb0=3000;
-Nb1=k1*100;
-Nb2=k2*100;
+Nb0=8000;
+Nb1=k1*100*5;
+Nb2=k2*100*3;
+t1=1;
+t2=2;
 [SNR_bit,BER0] = BERvsSNR_Uncoded(Nb0,H0,"threshold detector",'PSK',2,0,10,1);
 [SNR_bit,BER1] = BERvsSNR_Code1(Nb1,k1,g1,H0,"threshold detector");
 [SNR_bit,BER2] = BERvsSNR_Code2(Nb2,k2,g2,H0,"threshold detector");
 
 EbNo=10.^(SNR_bit/10);
 Pb0=0.5*erfc(sqrt(EbNo));
-Pb1=0.5*erfc(sqrt(EbNo*rate1)).^dmin1;
-Pb2=0.5*erfc(sqrt(EbNo*rate2)).^dmin2;
+Pb1=0.5*erfc(sqrt(EbNo*rate1*(t1+1)));
+Pb2=0.5*erfc(sqrt(EbNo*rate2*(t2+1)));
 figure();
-grid on
 
-semilogy(SNR_bit,BER0);
+
+semilogy(SNR_bit,BER0,"-o",'LineWidth',3.0);
 hold on
-semilogy(SNR_bit,BER1)
-semilogy(SNR_bit,BER2)
+semilogy(SNR_bit,BER1,"-*",'LineWidth',3.0)
+semilogy(SNR_bit,BER2,"-x",'LineWidth',3.0)
 
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('AWGN Channel Empirical BER vs Eb/N0'); 
 legend('Uncoded','Code BCH 1','Code BCH 2')
+grid on
 hold off
 figure();
-grid on
-semilogy(SNR_bit,Pb0);
+
+semilogy(SNR_bit,Pb0,"-o",'LineWidth',3.0);
 hold on
-semilogy(SNR_bit,Pb1)
-semilogy(SNR_bit,Pb2)
+semilogy(SNR_bit,Pb1,"-*",'LineWidth',3.0)
+semilogy(SNR_bit,Pb2,"-x",'LineWidth',3.0)
 xlabel('Eb/No (in dB)')
 ylabel('BER')
 title('AWGN Channel Theoretical BER vs Eb/N0');
 legend('Uncoded','Code BCH 1','Code BCH 2')
+grid on
 hold off
 
 %% %%%%%%%%%% plot BER versus Eb/No for uncoded BPSK with 4 channels%%%%%%%%
