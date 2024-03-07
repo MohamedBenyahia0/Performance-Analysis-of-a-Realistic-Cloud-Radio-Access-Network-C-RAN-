@@ -1,0 +1,1 @@
+set(groot,'defaultLineLineWidth',10.0) % Set the default line width to 2.0 points

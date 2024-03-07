@@ -17,14 +17,14 @@ h3 = filtre_canal(m,A_3,tau,Ts,L);
 h3_norm = h3/norm(h3);
 H3=toeplitzMatrix(h3_norm,N,L);
 
-plot(m,h1_norm);
+plot(m,h1_norm,'-o',"LineWidth",3.0);
 title('Channels L=6 N=100');
 xlabel("k" );
 ylabel("h(k)");
 
 hold on;
-plot(m,h2_norm);
+plot(m,h2_norm,'-*',"LineWidth",3.0);
 
-plot(m,h3_norm);
+plot(m,h3_norm,'-x',"LineWidth",3.0);
 legend('Channel 1','Channel 2','Channel 3');
 hold off;
