@@ -5,7 +5,7 @@ N=length(z);
 
 s_est=zeros(N,1); %s_est=[ s_est(N)...s_est(1)]^T
 s_est(N)=threshold_detector(z(N)/R(N,N),mod,M);
-for i=1:N-1
+for i=N-1:-1:1
     z_prim_i=z(i);
     for k=i+1:N
         z_prim_i=z_prim_i-R(i,k)*s_est(k);
