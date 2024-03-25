@@ -1,4 +1,4 @@
-function rfMixerOut = upMixer(InputI,InputQ,Flo,continuousTimeFs)
+function [rfMixerOut,PowerCons] = upMixer(InputI,InputQ,Flo,continuousTimeFs)
     %upMixer - Implements an AMS/RF upmixer
     %   For sake of simplicity, in the project, mixers are ideal
     %
@@ -24,6 +24,7 @@ function rfMixerOut = upMixer(InputI,InputQ,Flo,continuousTimeFs)
     % Website: https://c2s.telecom-paristech.fr/TODO
     % Feb. 2020
     %------------- BEGIN CODE --------------
+    PowerCons=5*10^(-12)*Flo;
 
     sigLen       = length([InputI(:) InputQ(:)]);
     timeInstants = (0:(sigLen-1))/continuousTimeFs;

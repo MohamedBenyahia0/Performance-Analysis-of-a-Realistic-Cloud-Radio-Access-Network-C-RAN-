@@ -1,4 +1,4 @@
-function [BBOutput] = BBamp(input,Gain,NF,IIP3,R,BW_noise,continuousTimeSamplingRate)
+function [BBOutput,PowerCons] = BBamp(input,Gain,NF,IIP3,R,BW_noise,continuousTimeSamplingRate)
     %BBamp - Simulates a BB amplifier with a noise figure and an IIP3
     %
     % Syntax:  [lnaOutput] = BBamp(input,Gain,NF,IIP3,R,BW_noise)
@@ -29,6 +29,7 @@ function [BBOutput] = BBamp(input,Gain,NF,IIP3,R,BW_noise,continuousTimeSampling
     % Website: https://c2s.telecom-paristech.fr/TODO
     % Feb. 2020, Apr. 2020, Dec. 2020, March 2022, March 2023
     %------------- BEGIN CODE --------------
+    PowerCons=10^(-10)*BW_noise;
 
     isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
     if isOctave

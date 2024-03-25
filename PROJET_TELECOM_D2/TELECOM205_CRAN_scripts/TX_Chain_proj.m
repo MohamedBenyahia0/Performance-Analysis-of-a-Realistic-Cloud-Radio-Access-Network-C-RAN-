@@ -18,7 +18,7 @@ clear;
 % Simulation parameters
 continuousTimeSamplingRate    = 19.98e9; % Operating Frequency to emulate the behavior of a continuous time system
 Ts_Cont                       = 1/continuousTimeSamplingRate; % Continuous time sampling period
-%N_Cont                       = 2^18;     % Number of signal points (@continuous time rate)
+N_cont                       = 2^18;     % Number of signal points (@continuous time rate)
 N                             = 2^13;     % Number of signal points (@baseband rate)
 
 % System properties
@@ -69,19 +69,40 @@ fin       = Bin_in*Fs_DAC/N;
 
 
 % PAs definition example
-% Select a model between 1, 2 or 3
+% Select a model between 1, 2 ,3,4,5
 PA_model    = 2; 
-PA_NF       = 5;
-PA_Gain     = 14;
+
 switch (PA_model) 
-  case 1
-   PA_IIP3  = 35;
-  case 2
-   PA_IIP3  = 30;
-  case 3
-   PA_IIP3  = 20;
-  otherwise
-   PA_IIP3  = 100;    
+  case 1 %ZX60-V63+
+   PA_IIP3  = 10.9;
+   PA_NF=3.7;
+   PA_Gain=20.3;
+   PA_PowerCons=0.5;
+  case 2 %ZX60-V62+
+   PA_IIP3  = 18;
+   PA_Gain=15.4;
+   PA_NF=5.1;
+   PA_PowerCons=0.725;
+  case 3 %ZHL-42
+   PA_IIP3  = 5.02;
+   PA_Gain=32.98;
+   PA_NF=7.55;
+   PA_PowerCons=13.2;
+  case 4 %RFLUPA05M06G
+   
+   PA_Gain=33;
+   PA_PowerCons=3.36;
+   PA_NF=3;
+   PA_IIP3=7.5;
+   
+
+
+  otherwise %ADL5606
+   PA_IIP3  = 22.6;
+   PA_Gain=20.6;
+   PA_NF=5.1;
+   PA_PowerCons=1.01;
+
 end
 
 
@@ -143,6 +164,8 @@ xlabel('frequency (Hz)')
 ylabel('PSD (dBm/bin)')
 title('Zoom PA Output')
 axis([Flo-2*BW,Flo+2*BW,-150,30])
+
+
 
 
 

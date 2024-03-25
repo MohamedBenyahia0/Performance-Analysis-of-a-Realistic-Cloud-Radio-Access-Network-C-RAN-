@@ -86,3 +86,15 @@ def compute_SNR(data_psd_mat_avg, Fsig_offset, BW, sample_rate):
 
     return SNR_vec
 
+def sig_power(data_psd_mat_avg, Fsig_offset, sample_rate):
+    """
+    docstring
+    """
+    # Compute the signal bin
+    Fsig_bin = np.fix(Fsig_offset/sample_rate*len(data_psd_mat_avg))
+    # compute the signal bins with blackman window
+    Fsig_bin_vec = np.arange(-2,3)+Fsig_bin
+    # Compute the signal power
+    Psig_vec = np.sum(data_psd_mat_avg[Fsig_bin_vec.astype(int),:],axis=0)
+
+    return Psig_vec

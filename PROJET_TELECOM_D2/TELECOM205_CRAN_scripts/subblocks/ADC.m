@@ -1,4 +1,4 @@
-function [DigOutput] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTimeFs)
+function [DigOutput,PowerCons] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTimeFs)
     %ADC - Implements an AMS Analog to Digital converter 
     %
     % Syntax:  [DigOutput] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTimeFs)
@@ -27,6 +27,7 @@ function [DigOutput] = ADC(input,Nbits,Vref,adcSamplingRate,delay,continuousTime
     % Website: https://c2s.telecom-paristech.fr/TODO
     % Feb. 2020, Apr. 2020
     %------------- BEGIN CODE --------------
+    PowerCons=10^(-13)*adcSamplingRate*2^Nbits;
 
     % TODO : check imaginary part
     

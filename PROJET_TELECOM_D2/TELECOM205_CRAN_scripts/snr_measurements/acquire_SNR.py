@@ -17,12 +17,12 @@ import utilities
 distance = input("Please enter the distance in meters: ")
 
 # RF parameters
-Fc                = 2.4e9;   # Central frequency of the band
+Fc                = 0.6e9;   # Central frequency of the band
 BW                = 20e6;    # Considered bandwidth of the system
 Fsig_offset       = 1e6;     # Offset of the signal from the center frequency
 
 # Create radio
-sdr = adi.Pluto("ip:192.168.2.1")
+sdr = adi.Pluto("ip:pluto.local")
 
 # Number of acquisitions
 N_acq = 15
@@ -31,7 +31,7 @@ samples_per_frame = 2**13
 
 # Configure properties
 sdr.rx_rf_bandwidth           = int(BW)
-sdr.sample_rate               = int(BW)
+sdr.sample_rate               = int(30.72e6)
 sdr.rx_lo                     = int(Fc)
 sdr.rx_enabled_channels       = [0]
 sdr.gain_control_mode_chan0   = "manual"
@@ -41,8 +41,8 @@ sdr.rx_buffer_size            = samples_per_frame
 print("RX LO %s" % (sdr.rx_lo))
 
 # Define a vector of gains to try
-gain_start    = 0.
-gain_stop     = 60.
+gain_start    = -20.
+gain_stop     = 40.
 gain_step     = 5.
 gain_vec      = np.arange(gain_start, gain_stop, gain_step)
 
@@ -70,10 +70,10 @@ for n_gain in range(len(gain_vec)):
 print("Compute the average PSD for each gain value")
 data_psd_mat_avg = np.mean(data_psd_mat, axis=2)
 
-# Compute SNR
-SNR = utilities.compute_SNR(data_psd_mat_avg, Fsig_offset, BW, sdr.sample_rate)
-SNR_dB = 10*np.log10(SNR)
-# print(str(10*np.log10(SNR)))
+# Compute sig_power
+sig_power_vec = utilities.sig_power(data_psd_mat_avg, Fsig_offset, sdr.sample_rate)
+sig_power_vec_dB = 10*np.log10(sig_power_vec)
+# print(str(10*np.log10(sig_power)))
 
 #################################################
 # Plotting section and file exports
@@ -92,12 +92,12 @@ plot_filename = "distance_"+str(distance)+"m_spectrums.pdf"
 utilities.plot_spectrums(gain_vec, data_psd_mat_avg, f, plot_filename)
 
 # Repack data for CSV export
-data_csv=np.column_stack((gain_vec, SNR_dB))
+data_csv=np.column_stack((gain_vec, sig_power_vec_dB))
 
-# Export SNR to a CSV file
-csv_filename = "distance_"+str(distance)+"m_snrs.csv"
+# Export signal power to a CSV file
+csv_filename = "distance_"+str(distance)+"m_sig_pows.csv"
 # https://stackoverflow.com/questions/36210977/python-numpy-savetxt-header-has-extra-character
-np.savetxt(csv_filename, data_csv, delimiter=",", header="Gain [dB], SNR [dB]", comments="")
+np.savetxt(csv_filename, data_csv, delimiter=",", header="Gain [dB], Signal Power [dB]", comments="")
 
 # Export average PSDs to a CSV file
 csv_filename = "distance_"+str(distance)+"m_psds.csv"

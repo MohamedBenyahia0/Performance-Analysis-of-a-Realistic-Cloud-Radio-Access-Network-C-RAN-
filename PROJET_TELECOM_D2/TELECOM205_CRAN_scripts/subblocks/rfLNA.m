@@ -1,4 +1,4 @@
-function [lnaOutput] = rfLNA(input,Gain,NF,IIP3,R,BW_noise)
+function [lnaOutput,PowerCons] = rfLNA(input,Gain,NF,IIP3,R,BW_noise)
     %rfLNA - Simulates a low noise amplifier with a noise figure and an IIP3
     %
     % Syntax:  [lnaOutput] = rfLNA(input,Gain,NF,IIP3,R,BW_noise)
@@ -25,6 +25,7 @@ function [lnaOutput] = rfLNA(input,Gain,NF,IIP3,R,BW_noise)
     % Website: https://c2s.telecom-paristech.fr/TODO
     % Feb. 2020, Apr. 2020, Dec. 2020
     %------------- BEGIN CODE --------------
+    PowerCons=10^(-2)/(10^(NF/10)-1);
 
     isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
     if isOctave

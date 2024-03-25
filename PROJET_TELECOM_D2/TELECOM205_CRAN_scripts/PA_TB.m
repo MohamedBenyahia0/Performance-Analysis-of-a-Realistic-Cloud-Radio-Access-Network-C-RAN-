@@ -36,20 +36,41 @@ AntennaNoise    = randn(1,N_Cont)*sqrt(K*T*continuousTimeSamplingRate/2*Rin);
 in              = Ain*sin(2*pi*fin*t_Cont+rand()*2*pi)+AntennaNoise; % Input signal
 
 % PA parameters
-PA_model    = 2; %%% Select a model between 1, 2 or 3
-PA_NF       = 5;
-PA_Gain     = 40;
+PA_model    = 2; %%% Select a model between 1, 2,3,4,5
+
 
 %%%%%%%%%%%% PA %%%%%%%%%%%
 switch (PA_model) 
-  case 1
-   PA_IIP3  = 35;
-  case 2
-   PA_IIP3  = 30;
-  case 3
-   PA_IIP3  = 20;
-  otherwise
-   PA_IIP3  = 100;
+  case 1 %ZX60-V63+
+   PA_IIP3  = 10.9;
+   PA_NF=3.7;
+   PA_Gain=20.3;
+   PA_PowerCons=0.5;
+  case 2 %ZX60-V62+
+   PA_IIP3  = 18;
+   PA_Gain=15.4;
+   PA_NF=5.1;
+   PA_PowerCons=0.725;
+  case 3 %ZHL-42
+   PA_IIP3  = 5.02;
+   PA_Gain=32.98;
+   PA_NF=7.55;
+   PA_PowerCons=13.2;
+  case 4 %RFLUPA05M06G
+   
+   PA_Gain=33;
+   PA_PowerCons=3.36;
+   PA_NF=3;
+   PA_IIP3=7.5;
+   
+
+
+  otherwise %ADL5606
+   PA_IIP3  = 22.6;
+   PA_Gain=20.6;
+   PA_NF=5.1;
+   PA_PowerCons=1.01;
+
 end
 
 % Operate PA

@@ -81,7 +81,7 @@ basebandRRC = rcosdesign(rollOff,symbolSpan,basebandOverSampling,'sqrt');
 %%%%%                               'mod'     for a modulated QAM 16 signal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                              
 
-test_type='twotone';
+test_type='mod';
 switch test_type
    case 'onetone'
       %%% one tone signal%%%
@@ -120,8 +120,41 @@ end
 [basebandDigital_I_unorm,basebandDigital_Q_unorm] = complx2cart(basebandSig(:));
 
 %%% Digital to Analog Conversion %%%
-nBitDAC = 18;           % Number of bits of the DAC
-Vref    = 1;            % Voltage reference of the DAC
+nBitDAC = 16;           % Number of bits of the DAC
+PA_model=4;
+switch (PA_model) 
+  case 1 %ZX60-V63+
+   PA_IIP3  = 10.9;
+   PA_NF=3.7;
+   PA_Gain=20.3;
+   PA_PowerCons=0.5;
+  case 2 %ZX60-V62+
+   PA_IIP3  = 18;
+   PA_Gain=15.4;
+   PA_NF=5.1;
+   PA_PowerCons=0.725;
+  case 3 %ZHL-42
+   PA_IIP3  = 5.02;
+   PA_Gain=32.98;
+   PA_NF=7.55;
+   PA_PowerCons=13.2;
+  case 4 %RFLUPA05M06G
+   
+   PA_Gain=33;
+   PA_PowerCons=3.36;
+   PA_NF=3;
+   PA_IIP3=7.5;
+   
+
+
+  otherwise %ADL5606
+   PA_IIP3  = 22.6;
+   PA_Gain=20.6;
+   PA_NF=5.1;
+   PA_PowerCons=1.01;
+
+end
+Vref    = 0.14;            % Voltage reference of the DAC
 dacType = 'zoh';        % DAC type ; can be 'zoh' or 'impulse'
 
 % Normalize signal for conversion
@@ -163,12 +196,35 @@ Flo      = 2.4e9; % Local Oscillator Frequency
 rfSignal = upMixer(basebandAnalog_filt_I,basebandAnalog_filt_Q,Flo,continuousTimeSamplingRate);
 
 %%% RF Amplification %%%
-PA_IIP3       = 100;   % PA IIP3 ; in dBm
-PA_NF         = 5;     % PA Noise figure ; in dB
-PA_Gain       = 40;    % PA Gain ; in dB power
-rfPASignal    = rfPA(rfSignal,PA_Gain,PA_NF,PA_IIP3,Rin,continuousTimeSamplingRate/2);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+rfPASignal    = rfPA(rfSignal,PA_Gain,PA_NF,PA_IIP3,Rin,continuousTimeSamplingRate/2);
+%% Calculating Average Power %%%
+voltsq2mwatt    = 1e3/Rin; % Conversion factor from V^2 to milliWatt
+f1=2.385*10^9;
+f2=2.415*10^9;
+OutputSpectrum=plot_spectrum(rfPASignal*sqrt(voltsq2mwatt),2,continuousTimeSamplingRate,1);
+bin1=round(f1/continuousTimeSamplingRate*length(rfPASignal));
+bin2=round(f2/continuousTimeSamplingRate*length(rfPASignal));
+AvgPower= 10*log10(sum(OutputSpectrum(bin1:bin2)));
+disp(['Average Power Output PA in dBm : ',num2str(AvgPower)]);
+%% Calculating ACPR%%%%%
+f1_dist_sup=2.415*10^9;
+bin1_dist_sup=round(f1_dist_sup/continuousTimeSamplingRate*length(rfPASignal));
+f2_dist_sup=2.445*10^9;
+bin2_dist_sup=round(f2_dist_sup/continuousTimeSamplingRate*length(rfPASignal));
+f1_dist_inf=2.355*10^9;
+bin1_dist_inf=round(f1_dist_inf/continuousTimeSamplingRate*length(rfPASignal));
+f2_dist_inf=2.385*10^9;
+bin2_dist_inf=round(f2_dist_inf/continuousTimeSamplingRate*length(rfPASignal));
+ACPR_inf=10*log10(sum(OutputSpectrum(bin1:bin2)))-10*log10(sum(OutputSpectrum(bin1_dist_inf:bin2_dist_inf)));
+ACPR_sup=10*log10(sum(OutputSpectrum(bin1:bin2)))-10*log10(sum(OutputSpectrum(bin1_dist_sup:bin2_dist_sup)));
+disp(['ACPR in dB (inf band): ',num2str(ACPR_inf)]);
+disp(['ACPR in dB (sup band): ',num2str(ACPR_sup)]);
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                      Channel                        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -177,7 +233,7 @@ carrierFreq        = Flo; % Center frequency of the transmission
 c                  = 3e8; % speed of light in vacuum
 distance           = 100; % Distance between Basestation and UE : [1.4,1.4e3] metres
 % Amplitude Attenuation in free space
-ChannelAttenuation = (c/carrierFreq./(4*pi*distance));
+ChannelAttenuation = (c/carrierFreq./(4*pi*distance))^2;
 rxSignal           = rfPASignal*ChannelAttenuation;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -187,7 +243,7 @@ rxSignal           = rfPASignal*ChannelAttenuation;
 %%% LNA %%%
 LNA_Gain = 15;   % (dB)
 LNA_IIP3 = 100;  % (dBm)
-LNA_NF   = 0;    % (dB)
+LNA_NF   = 3;    % (dB)
 rfLNASignal = rfLNA(rxSignal,LNA_Gain,LNA_NF,LNA_IIP3,Rin,continuousTimeSamplingRate/2);
 
 %%% Mixing down to BB %%%
@@ -228,6 +284,10 @@ basebandAnalog_amp_Q = BBamp(basebandAnalog_filtrx_Q,BBamp_Gain,BBamp_NF,BBamp_I
 
 %%% Analog to Digital Conversion %%%
 nBitADC = 18;
+delay_basebandAnalogFiltTX=TXBB_Filt_n/2; % delay of baseband Analog Filter equal order of filter/2
+delay_basebandAnalogFiltRX=RXBB_Filt_n/2; % delay of baseband Analog Filter equal order of filter/2
+delay_th=finddelay(basebandAnalog_dac_I,basebandAnalog_amp_I)
+delay_exp=delay_basebandAnalogFiltRX+delay_basebandAnalogFiltTX;
 delay   = 0; % WARNING : non trivial value !!! to be thoroughly analyzed
 adcSamplingRate = basebandSamplingRate;
 % Perform conversion
