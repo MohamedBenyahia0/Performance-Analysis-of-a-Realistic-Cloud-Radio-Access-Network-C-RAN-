@@ -120,30 +120,34 @@ end
 [basebandDigital_I_unorm,basebandDigital_Q_unorm] = complx2cart(basebandSig(:));
 
 %%% Digital to Analog Conversion %%%
-nBitDAC = 16;           % Number of bits of the DAC
-PA_model=4;
+nBitDAC = 18;           % Number of bits of the DAC
+PA_model=5;
 switch (PA_model) 
   case 1 %ZX60-V63+
    PA_IIP3  = 10.9;
    PA_NF=3.7;
    PA_Gain=20.3;
    PA_PowerCons=0.5;
+   Vref=0.95;
   case 2 %ZX60-V62+
    PA_IIP3  = 18;
    PA_Gain=15.4;
    PA_NF=5.1;
    PA_PowerCons=0.725;
+   Vref=1;
   case 3 %ZHL-42
    PA_IIP3  = 5.02;
    PA_Gain=32.98;
    PA_NF=7.55;
    PA_PowerCons=13.2;
+   Vref=0.125;
   case 4 %RFLUPA05M06G
    
    PA_Gain=33;
    PA_PowerCons=3.36;
    PA_NF=3;
    PA_IIP3=7.5;
+   Vref=0.115;
    
 
 
@@ -152,9 +156,10 @@ switch (PA_model)
    PA_Gain=20.6;
    PA_NF=5.1;
    PA_PowerCons=1.01;
+   Vref=0.5;
 
 end
-Vref    = 0.14;            % Voltage reference of the DAC
+
 dacType = 'zoh';        % DAC type ; can be 'zoh' or 'impulse'
 
 % Normalize signal for conversion
@@ -233,8 +238,8 @@ carrierFreq        = Flo; % Center frequency of the transmission
 c                  = 3e8; % speed of light in vacuum
 distance           = 100; % Distance between Basestation and UE : [1.4,1.4e3] metres
 % Amplitude Attenuation in free space
-ChannelAttenuation = (c/carrierFreq./(4*pi*distance))^2;
-rxSignal           = rfPASignal*ChannelAttenuation;
+ChannelAttenuation = (c/carrierFreq./(4*pi*distance));
+rxSignal           = rfPASignal*ChannelAttenuation; % Attenuation in Voltage (Not in Power that's why there is no factor 2)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                     Receiver                        %%%
@@ -243,7 +248,7 @@ rxSignal           = rfPASignal*ChannelAttenuation;
 %%% LNA %%%
 LNA_Gain = 15;   % (dB)
 LNA_IIP3 = 100;  % (dBm)
-LNA_NF   = 3;    % (dB)
+LNA_NF   = 1;    % (dB)
 rfLNASignal = rfLNA(rxSignal,LNA_Gain,LNA_NF,LNA_IIP3,Rin,continuousTimeSamplingRate/2);
 
 %%% Mixing down to BB %%%
@@ -286,9 +291,9 @@ basebandAnalog_amp_Q = BBamp(basebandAnalog_filtrx_Q,BBamp_Gain,BBamp_NF,BBamp_I
 nBitADC = 18;
 delay_basebandAnalogFiltTX=TXBB_Filt_n/2; % delay of baseband Analog Filter equal order of filter/2
 delay_basebandAnalogFiltRX=RXBB_Filt_n/2; % delay of baseband Analog Filter equal order of filter/2
-delay_th=finddelay(basebandAnalog_dac_I,basebandAnalog_amp_I)
-delay_exp=delay_basebandAnalogFiltRX+delay_basebandAnalogFiltTX;
-delay   = 0; % WARNING : non trivial value !!! to be thoroughly analyzed
+
+delay_th=delay_basebandAnalogFiltRX+delay_basebandAnalogFiltTX;
+delay   = delay_th; % WARNING : non trivial value !!! to be thoroughly analyzed
 adcSamplingRate = basebandSamplingRate;
 % Perform conversion
 basebandAnalog_adc_I = ADC(basebandAnalog_amp_I,nBitADC,Vref,adcSamplingRate,delay,continuousTimeSamplingRate);
