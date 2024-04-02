@@ -121,7 +121,7 @@ end
 
 %%% Digital to Analog Conversion %%%
 nBitDAC = 18;           % Number of bits of the DAC
-PA_model=5;
+PA_model=4;
 switch (PA_model) 
   case 1 %ZX60-V63+
    PA_IIP3  = 10.9;
@@ -147,7 +147,7 @@ switch (PA_model)
    PA_PowerCons=3.36;
    PA_NF=3;
    PA_IIP3=7.5;
-   Vref=0.115;
+   Vref=0.12;
    
 
 
