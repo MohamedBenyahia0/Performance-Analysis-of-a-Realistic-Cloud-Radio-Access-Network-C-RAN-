@@ -58,11 +58,11 @@ Power600MHz_dB=zeros(1,11);
 for i=1:11
     filename1='freq2.5GHZ//distance_'+string(5*i)+'m_sig_pows.csv';
     M=readmatrix(filename1);
-    Power2_5GHz_dB(i)=M(8,2); % Gain 35 dB
+    Power2_5GHz_dB(i)=M(7,2); % Gain 30 dB
 
     filename2='freq600MHZ//distance_'+string(5*i)+'m_sig_pows.csv';
     A=readmatrix(filename2);
-    Power600MHz_dB(i)=A(12,2); % Gain 35 dB
+    Power600MHz_dB(i)=A(6,2); % Gain 5 dB
 
 end
 
