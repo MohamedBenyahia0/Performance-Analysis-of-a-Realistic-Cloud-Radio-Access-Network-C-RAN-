@@ -24,7 +24,7 @@ for gain = 0:5:35
     for i = 1:11
         filename = strcat('freq2.5GHZ//distance_', string(5*i), 'm_sig_pows.csv');
         A = readmatrix(filename);
-        PowerByGain2_5GHz(gain/5+1, i) = A(5+gain/5, 2) - gain; % Adjusting power based on gain
+        PowerByGain2_5GHz(gain/5+1, i) = A(1+gain/5, 2) - gain; % Adjusting power based on gain
     end
 end
 
@@ -33,7 +33,7 @@ for gain = 0:5:35
     for i = 1:11
         filename = strcat('freq600MHZ//distance_', string(5*i), 'm_sig_pows.csv');
         A = readmatrix(filename);
-        PowerByGain600MHz(gain/5+1, i) = A(1+gain/5, 2) - gain; % Adjusting power based on gain
+        PowerByGain600MHz(gain/5+1, i) = A(5+gain/5, 2) - gain; % Adjusting power based on gain
     end
 end
 
