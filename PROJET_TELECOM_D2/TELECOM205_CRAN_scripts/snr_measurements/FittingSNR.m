@@ -58,7 +58,7 @@ Power600MHz_dB=zeros(1,11);
 for i=1:11
     filename1='freq2.5GHZ//distance_'+string(5*i)+'m_sig_pows.csv';
     M=readmatrix(filename1);
-    Power2_5GHz_dB(i)=M(7,2); % Gain 30 dB
+    Power2_5GHz_dB(i)=M(8,2); % Gain 35 dB
 
     filename2='freq600MHZ//distance_'+string(5*i)+'m_sig_pows.csv';
     A=readmatrix(filename2);
@@ -75,7 +75,7 @@ distance_dB           = 10*log10(distance); % Converting the distance to dB as t
 poly_ord              = 1; % Order of the polynomial to be fitted
 poly_coef_fit         = polyfit(distance_dB,Power2_5GHz_dB,poly_ord);  %%% Linear fitting of the coefficient
 
-distance_interp       = [1:100]; %%% distance vector of the interpolated function
+distance_interp       = [5:5:55]; %%% distance vector of the interpolated function
 distance_interp_dB    = 10*log10(distance_interp);
 fittedcurve           = polyval(poly_coef_fit,distance_interp_dB);
 

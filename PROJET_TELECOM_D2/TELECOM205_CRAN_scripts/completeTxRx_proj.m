@@ -120,7 +120,7 @@ end
 [basebandDigital_I_unorm,basebandDigital_Q_unorm] = complx2cart(basebandSig(:));
 
 %%% Digital to Analog Conversion %%%
-nBitDAC = 18;           % Number of bits of the DAC
+nBitDAC = 10;           % Number of bits of the DAC
 PA_model=5;
 switch (PA_model) 
   case 1 %ZX60-V63+
@@ -147,7 +147,7 @@ switch (PA_model)
    PA_PowerCons=3.36;
    PA_NF=3;
    PA_IIP3=7.5;
-   Vref=0.115;
+   Vref=0.12;
    
 
 
@@ -155,7 +155,7 @@ switch (PA_model)
    PA_IIP3  = 22.6;
    PA_Gain=20.6;
    PA_NF=5.1;
-   PA_PowerCons=1.01;
+   PA_PowerCons=1.81;
    Vref=0.5;
 
 end
@@ -240,7 +240,7 @@ disp(['Power Consommation in TX in watts:',num2str(PowerConsTX)]);
 %%% Channel %%%
 carrierFreq        = Flo; % Center frequency of the transmission
 c                  = 3e8; % speed of light in vacuum
-distance           = 1.4e3; % Distance between Basestation and UE : [1.4,1.4e3] metres
+distance           = 100; % Distance between Basestation and UE : [1.4,1.4e3] metres
 % Amplitude Attenuation in free space
 ChannelAttenuation = (c/carrierFreq./(4*pi*distance));
 rxSignal           = rfPASignal*ChannelAttenuation; % Attenuation in Voltage (Not in Power that's why there is no factor 2)
@@ -249,11 +249,25 @@ rxSignal           = rfPASignal*ChannelAttenuation; % Attenuation in Voltage (No
 %%%                     Receiver                        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+rxSignal_spec = plot_spectrum(rxSignal*sqrt(voltsq2mwatt),2,continuousTimeSamplingRate,1);
+powerSig_LNA = sum(rxSignal_spec(bin1 : bin2));
+powerSig_LNA =  10*log10(powerSig_LNA);
+
 %%% LNA %%%
-LNA_Gain = 20;   % (dB)
-LNA_IIP3 = 100;  % (dBm)
-LNA_NF   = 3;    % (dB)
+LNA_Gain = 10;   % (dB)
+LNA_IIP3 = 7;  % (dBm)
+LNA_NF   = 9.5;    % (dB)
 [rfLNASignal,PowerConsLNA] = rfLNA(rxSignal,LNA_Gain,LNA_NF,LNA_IIP3,Rin,continuousTimeSamplingRate/2);
+%%% Calculate baseband gain to ensure the use of fullscale in ADC when distance = 1.4m%%%
+AttDownMixer=6; 
+if(distance == 1.4)
+    voltage_rms_max = 10^(powerSig_LNA/20) * sqrt((Rin/1e3));
+    voltage_peak_max = sqrt(2)* voltage_rms_max;
+    gain_total = 20*log10((Vref)/voltage_peak_max); 
+    gain_BB = gain_total - LNA_Gain+AttDownMixer;
+else
+    gain_BB = 19.4;
+end
 
 %%% Mixing down to BB %%%
 [basebandAnalog_raw_I,basebandAnalog_raw_Q,PowerConsdownMixer] = downMixer(rfLNASignal,Flo,continuousTimeSamplingRate);
@@ -281,7 +295,7 @@ basebandAnalog_filtrx_Q = basebandAnalogFiltFake(basebandAnalog_raw_Q,RXBB_Filt,
 
 
 %%% Baseband Gain %%%
-BBamp_Gain    = 20; % (dB)
+BBamp_Gain    = gain_BB; % (dB)
 BBamp_IIP3    = 40; % (dBm)
 BBamp_NF      = 10; % (dB)
 BBamp_band    = 10e6;% (MHz)
@@ -292,7 +306,7 @@ BBamp_band    = 10e6;% (MHz)
 
 
 %%% Analog to Digital Conversion %%%
-nBitADC = 18;
+nBitADC = 12;
 delay_basebandAnalogFiltTX=TXBB_Filt_n/2; % delay of baseband Analog Filter equal order of filter/2
 delay_basebandAnalogFiltRX=RXBB_Filt_n/2; % delay of baseband Analog Filter equal order of filter/2
 
@@ -300,6 +314,7 @@ delay_th=delay_basebandAnalogFiltRX+delay_basebandAnalogFiltTX;
 delay   = delay_th; % WARNING : non trivial value !!! to be thoroughly analyzed
 adcSamplingRate = basebandSamplingRate;
 % Perform conversion
+Vref=1;
 [basebandAnalog_adc_I,PowerConsADC_I] = ADC(basebandAnalog_amp_I,nBitADC,Vref,adcSamplingRate,delay,continuousTimeSamplingRate);
 [basebandAnalog_adc_Q,PowerConsADC_Q] = ADC(basebandAnalog_amp_Q,nBitADC,Vref,adcSamplingRate,delay,continuousTimeSamplingRate);
 
@@ -329,10 +344,13 @@ Bin_limits     = N/2+[round(-BW/Fs_ADC*N),round(BW/Fs_ADC*N)];
 fullband        = true;
 Bin_in       = round(freqVin_or1/Fs_ADC*N);
 Bin_sig_shiftd = N/2+Bin_in;
-bin_width      = 2;
+bin_width      = 5;
 SNR_out        = perf_estim(basebandComplexDigital,Bin_sig_shiftd,bin_width,Bin_limits,fullband);
 
 disp(['The SNR at the output of the ADC is ',num2str(SNR_out), ' dB'])
+
+
+
 %% Power Consommation in RX
 
 PowerConsRX=PowerConsADC_Q+PowerConsBBamp_Q+PowerConsLNA+PowerConsdownMixer;
@@ -342,6 +360,10 @@ disp(['Power Consommation in downMixer in watts:',num2str(PowerConsdownMixer)]);
 disp(['Power Consommation in Baseband Gain in watts:',num2str(PowerConsBBamp_Q)]);
 disp(['Power Consommation in RX in watts:',num2str(PowerConsRX)]);
 
+%% Bonus (Bit error rate)
+received=qamdemod(basebandComplexDigital_fir_truncated,16);
+d=finddelay(received,inSig);
+[number,ratio] = biterr(inSig(d+1:length(received)+d),received);
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%            Plot section            %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
