@@ -1,0 +1,25 @@
+
+T_bit=1e-9;
+T_imp=1e-5;
+nbits=T_imp/T_bit;
+t=0:T_bit:
+S_in=ones(nbits);
+
+Ts=T_bit;
+Fs=1/Ts;
+attenuation=10^(0.2/10);
+
+delta_lambda=2/Ts;
+L=1e3;
+D=17e-12;%ps/nm/km
+S=0.09e-12;%ps/nm^2/km
+lambda=1550e-9;
+c=3e8;
+beta2=-D*lambda^2/(2*pi*c);
+beta3=S*lambda^4/(4*pi^2*c^2);
+
+S_out=opticalFiber(S_in,Fs,attenuation,beta2,beta3,L);
+plot(t,S_in)
+hold on;
+plot(t,S_out);
+
