@@ -9,11 +9,11 @@ N_opt=0; % optical noise spectral power density
 [S, Ts, powerOfBlock,SNR_elec] = RX_photodetector(S_out, 1/Fs, N_opt, params_detector);
 P_out_lin=1e-3*10^(P_out_dbm/10);
 S=S./(P_out_lin*R);
-thresh=(max(S)-min(S))/2;
+
 S_hat=zeros(1,length(S));
 
 for i=1:length(S)
-    if (S(i)>=thresh)
+    if (S(i)>=0.5)
         S_hat(i)=1;
     end
 end

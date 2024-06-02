@@ -107,5 +107,9 @@ legend('2.5GHZ','10GHz')
 grid on;
 hold off;
 
+%% Fiber DCF
+D_DCF=-80*10^(-6);%s/m/m
+attenuation_DCF=0.5*log(10)/10;
+
 
 
