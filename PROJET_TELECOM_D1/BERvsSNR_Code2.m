@@ -1,27 +1,26 @@
-function [SNR_bit,BER2] = BERvsSNR_Code2(N,k2,g2,H,equalizer)
+function [SNR_bit,BER2] = BERvsSNR_Code2(N,k2,g2,H,equalizer,mod,M,SNRbitmin,SNRbitmax,step)
 
-SNR_bit=[0:10]; %% Eb/No en dB
-M=2;
-mod='PSK';
+SNR_bit=[SNRbitmin:step:SNRbitmax]; %% Eb/No en dB
+
 rate=k2/31;
 SNR=SNR_bit+10*log10(log2(M )*rate);
 BER2= zeros(1,length(SNR_bit));
 Energy_symbol = 1*rate*log2(M);
 No = Energy_symbol./10.^(SNR/10);
-N_bits=N*log2(M);
-nb_word=floor(N_bits/k2);
+
+nb_word=floor(N/k2);
 
 nb_trames=floor(nb_word/100);
-nb_err2=zeros(1,length(SNR_bit));
+
 for ii = 1:length(SNR_bit) 
     nb_err_tram=zeros(nb_trames,1);
     BERtram=zeros(nb_trames,1);
     for t=1:nb_trames
-        bits2 = randi([0,1],100*k2,1); % generation des messages d'information pour  BCH2
-        mess2=  reshape(bits2,[k2,100]);  
-        codeWords2=arrayfun(@(i) encoder(transpose(mess2(:,i)),g2),[1:100],'UniformOutput',false); % generation des mots codes avec BCH2
+        bits2 = randi([0,1],100*k2*log2(M),1); % generation des messages d'information pour  BCH2
+        mess2=  reshape(bits2,[k2,100*log2(M)]);  
+        codeWords2=arrayfun(@(i) encoder(transpose(mess2(:,i)),g2),[1:100*log2(M)],'UniformOutput',false); % generation des mots codes avec BCH2
         codeWords2=cell2mat(codeWords2);
-        codeWords2=reshape(codeWords2,[31*100,1]);
+        codeWords2=reshape(codeWords2,[31*100*log2(M),1]);
         
         %% %%%%%%%%% BPSK modulation
         
@@ -43,14 +42,14 @@ for ii = 1:length(SNR_bit)
             
         end
         d_est2 = symbols2bits(s_est2,mod,M); % convertir les symboles en bits
-        d_est2=reshape(d_est2,[31,100]);
-        m_hat2=arrayfun(@(i) decoder_2errors(transpose(d_est2(:,i)),g2),[1:100],'UniformOutput',false);
+        d_est2=reshape(d_est2,[31,100*log2(M)]);
+        m_hat2=arrayfun(@(i) decoder_2errors(transpose(d_est2(:,i)),g2),[1:100*log2(M)],'UniformOutput',false);
         m_hat2=cell2mat(m_hat2);
-        bits_hat2=reshape(m_hat2,[100*k2,1]);
+        bits_hat2=reshape(m_hat2,[100*k2*log2(M),1]);
         
         %%   %%%%%%%   calcul du BER
         nb_err_tram(t)=nb_err_tram(t)+sum(abs(bits_hat2-bits2));% compter le nombre d'erreur
-        BERtram(t) = nb_err_tram(t)/(100*k2);  % calcul du taux d'erreur binaire
+        BERtram(t) = nb_err_tram(t)/(100*k2*log2(M));  % calcul du taux d'erreur binaire
     end
 
 BER2(ii)=sum(BERtram)/nb_trames;  % calcul du taux d'erreur binaire
