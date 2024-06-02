@@ -8,7 +8,6 @@ spec_in=fftshift(spec_in);
 spec_out=spec_in.*transferFunct;
 spec_out=fftshift(spec_out);
 S_out=ifft(spec_out,N);
-
 S_out=S_out*exp(-attenuation/2*(L/10^3));
 
 
