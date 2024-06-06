@@ -180,7 +180,7 @@ for ii = 1:length(EsN0_dB)
     throughput(ii) = successful_transmissions / nb_trames;
 end
 
-%% Plot throughput vs Es/N0 BPSK
+%% Plot throughput vs Es/N0
 figure;
 plot(EsN0_dB, throughput_BCH, '-o');
 hold on;
@@ -302,7 +302,7 @@ for ii = 1:length(EsN0_dB)
     throughput(ii) = successful_transmissions / nb_trames;
 end
 
-%% Plot throughput vs Es/N0 8 QAM
+%% Plot throughput vs Es/N0 8 
 figure;
 plot(EsN0_dB, throughput_BCH, '-o');
 hold on;

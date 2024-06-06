@@ -20,7 +20,7 @@ c2_prim(3)=c2_prim(3)+1;
 c2_prim(6)=c2_prim(6)+1;
 m2_hat=decoder_2errors(c2_prim,g2);
 %% %%%%% Display Channels
-[H1,H2,H3] =plot_channel();
+[H1,H2,H3] =plot_channel(N_canal=100);
 
 H0=eye(100,100);
 %% %%%%%%%%%% plot BER versus Eb/No for uncoded and both BCH codes (BPSK) with AWGN channel%%%%%%%%
