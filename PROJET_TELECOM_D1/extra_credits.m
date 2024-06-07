@@ -78,7 +78,7 @@ Energy_symbol = 1*rate*log2(M);
 No = Energy_symbol./10.^(EsN0_dB/10);
 
 nb_trames=50;
-for ii = 1:length(EsN0_dB)
+parfor ii = 1:length(EsN0_dB)
     nb_err_tram=zeros(nb_trames,1);
     BERtram=zeros(nb_trames,1);
     successful_transmissions = 0;
