@@ -117,11 +117,11 @@ target_BER=1e-3;
 P_out_dbm=-19;
 
 L_array= [0:10:100].*1e3;
-BER_array_10GHz=zeros(1,length(L_array));
+BER_array_10Gbps=zeros(1,length(L_array));
 Fs=10e9;
 for i=1:length(BER_array_10Gbps)
     
-    BER_array_10GHz(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF);
+    BER_array_10Gbps(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF);
 end
 figure( );
 

@@ -1,8 +1,7 @@
 function BER = BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L,beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF)
 power_eml=P_out_dbm;
 att_dB=0.2*(L/1e3);
-att_DCF_dB=attenuation_DCF*10/log(10)*(L_DCF/1e3);
-power_eml_amp = power_eml+att_dB +att_DCF_dB;
+power_eml_amp = power_eml + att_dB;
 X=randi([0,1],1,100/target_BER); % generation des bits d'informations 
 ovs=5;
 signal = repelem(X,ovs);
