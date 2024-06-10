@@ -1,12 +1,16 @@
 function BER = BER_Fiber_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L,beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF)
-nb_err=0;
-X=randi([0,1],1,100/target_BER); % generation des bits d'informations 
-signal = repelem(X,5);
-n=length(signal);
-param_eml=make_emlaser('P_opt_dBm',P_out_dbm);
-[S_out, Ts_out, powerOfBlock] = TX_optical_eml(signal, 1/Fs, param_eml);
 
-S_out_fiber=opticalFiber(S_out,1/Ts_out,attenuation,beta2,beta3,L);
+
+X=randi([0,1],1,100/target_BER); % generation des bits d'informations 
+ovs=5;
+signal = repelem(X,ovs);
+Tsymb=1/Fs;
+Te = Tsymb/ovs;
+n=length(X);
+param_eml=make_emlaser('P_opt_dBm',P_out_dbm);
+[S_out, Ts_out, powerOfBlock] = TX_optical_eml(signal, Tsymb, param_eml);
+
+S_out_fiber=opticalFiber(S_out,1/Te,attenuation,beta2,beta3,L);
 S_out_fiber_DCF=opticalFiber(S_out_fiber,1/Ts_out,attenuation_DCF,beta2_DCF,beta3_DCF,L_DCF);
 params_detector=make_photodetector('B_e',Fs,'sensitivity',R);
 
@@ -22,6 +26,7 @@ for i=1:length(S)
         S_hat(i)=1;
     end
 end
-nb_err=nb_err+sum(abs(S_hat-signal));
+S_hat = S_hat(fix(ovs/2)+1:ovs:length(S_hat));
+nb_err=biterr(X,S_hat);
 BER=nb_err/n;
 end

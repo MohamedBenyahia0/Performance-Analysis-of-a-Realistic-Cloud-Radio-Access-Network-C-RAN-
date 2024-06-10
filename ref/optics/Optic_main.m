@@ -79,19 +79,20 @@ hold off;
 R=1;
 Fs=2.5e9;%10Gbits/s
 target_BER=1e-3;
-
+power_eml=-22;
 
 L_array= [0:10:100].*1e3;
 BER_array_2_5Gbps=zeros(1,length(L_array));
 for i=1:length(BER_array_2_5Gbps)
     
-    BER_array_2_5Gbps(i)=BER_Fiber_OOK(R,Fs,attenuation,beta2,beta3,L_array(i));
+    BER_array_2_5Gbps(i)=BER_Fiber_OOK(power_eml,R,Fs,attenuation,beta2,beta3,L_array(i));
 end
 BER_array_10Gbps=zeros(1,length(L_array));
 Fs=10e9;
+power_eml=-19;
 for i=1:length(BER_array_10Gbps)
     
-    BER_array_10Gbps(i)=BER_Fiber_OOK(R,Fs,attenuation,beta2,beta3,L_array(i));
+    BER_array_10Gbps(i)=BER_Fiber_OOK(power_eml,R,Fs,attenuation,beta2,beta3,L_array(i));
 end
 figure( );
 semilogy(L_array/1e3,BER_array_2_5Gbps,"-o",'LineWidth',3.0);
@@ -111,33 +112,25 @@ attenuation_DCF=0.5*log(10)/10;
 beta2_DCF=-D_DCF*lambda^2/(2*pi*c);
 beta3_DCF=S*lambda^4/(4*pi^2*c^2);
 L_DCF=(-D/D_DCF)*100e3;
-R=2;
-Fs=2.5e9;%10Gbits/s
+R=1;
 target_BER=1e-3;
-P_out_dbm=-2;
+P_out_dbm=-19;
 
 L_array= [0:10:100].*1e3;
-
-BER_array_2_5GHz=zeros(1,length(L_array));
-for i=1:length(BER_array_2_5GHz)
-    
-    BER_array_2_5GHz(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF);
-end
 BER_array_10GHz=zeros(1,length(L_array));
 Fs=10e9;
-for i=1:length(BER_array_10GHz)
+for i=1:length(BER_array_10Gbps)
     
-    BER_array_10GHz(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF_array(i));
+    BER_array_10GHz(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF);
 end
 figure( );
-semilogy(L_DCF_array/1e3,BER_array_2_5GHz,"-o",'LineWidth',3.0);
-hold on;
-semilogy(L_DCF_array/1e3,BER_array_10GHz,"-o",'LineWidth',3.0);
+
+semilogy(L_array/1e3,BER_array_10Gbps,"-o",'LineWidth',3.0);
 
 xlabel('fiber length (km)')
 ylabel('BER')
-title('Fiber propagation BER with compensation versus fiber length'); 
-legend('2.5GHZ','10GHz')
+title('Fiber propagation BER at 10Gbps with DCF versus fiber length'); 
+
 grid on;
 hold off;
 

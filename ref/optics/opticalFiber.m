@@ -1,7 +1,7 @@
 function S_out= opticalFiber(S_in,Fs,attenuation,beta2,beta3,L)
 N=length(S_in);
 bins=-N/2:(N-1)/2;
-w=bins*Fs/N;
+w=bins*2*pi*Fs/N;
 transferFunct=exp(-((w.^2).*(beta2/2)+(w.^3).*(beta3/6)).*L.*1i);
 spec_in=fft(S_in,N);
 spec_in=fftshift(spec_in);
