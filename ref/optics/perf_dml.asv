@@ -4,31 +4,30 @@ close all
 c = 3e8;  % Speed of light in m/s
 n = 1;    % Refractive index
 T_bit = 1e-9;  % Bit period in seconds
-lambda=1550e-9;
-v = c / lambda;  %Optical frequency
+v = c / n;  % Velocity
 Ts = T_bit;  % Sampling time
 
 % Initialize variables for I_DC and I_AC
-I_DC_values = 2:10:300;  % Array of I_DC values to test (in mA)
+I_DC_values = 10:2:40;  % Array of I_DC values to test (in mA)
 %I_DC_values = 7; %145:1:145;
-I_AC = 50;  % Fixed I_AC value (in mA)
+I_AC = 7000;  % Fixed I_AC value (in mA)
 
 % Initialize results storage
 results = struct();
-
+opticalPower=zeros(1,length(I_DC_values));
 % Loop over different I_DC values
 for I_DC=I_DC_values
     % Generate OOK signal
     num_bits = 100;
     bits = randi([0, 1], 1, num_bits);
-    OOK_sig = bits * I_AC * 1e-3 + I_DC * 1e-3; % Convertir mA en A
+    OOK_sig = bits * I_AC * 1e-3 + I_DC_values(i) * 1e-3; % Convertir mA en A
     
     % Create laser
     laser = make_laser_simple('v', v);
     
     % Transmit signal
     [S_opt, Ts_opt, powerOfBlock_tx] = TX_optical_dml(OOK_sig, Ts, laser);
-    opticalPower_dBm=10*log10(mean(abs(S_opt).^2)/1e3);
+    opticalPower(i)=10*log10(mean(abs(S_opt).^2)/1e3);
 
     % Create photodetector
     photodetector = make_photodetector('B_e',1e9);
@@ -64,7 +63,6 @@ for I_DC=I_DC_values
     results.(sprintf('I_DC_%dmA', I_DC)).powerOfBlock_rx = powerOfBlock_rx;
     results.(sprintf('I_DC_%dmA', I_DC)).SNR_elec = SNR_elec;
     results.(sprintf('I_DC_%dmA', I_DC)).BER = BER;
-    results.(sprintf('I_DC_%dmA', I_DC)).opticalPower_dBm = opticalPower_dBm;
     results.(sprintf('I_DC_%dmA', I_DC)).S_elec_norm_downsample = S_elec_norm_downsample;
 end
 
@@ -120,7 +118,6 @@ grid on;
 
 % 
 figure;
-opticalPower = arrayfun(@(x) results.(sprintf('I_DC_%dmA', x)).opticalPower_dBm, I_DC_values);
 semilogy(opticalPower,BERValues,'-o')
 xlabel('Optical Power')
 ylabel('BER')

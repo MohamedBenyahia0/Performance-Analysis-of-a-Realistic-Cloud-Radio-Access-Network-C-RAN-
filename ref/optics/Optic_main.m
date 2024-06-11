@@ -81,7 +81,7 @@ Fs=2.5e9;%10Gbits/s
 target_BER=1e-3;
 power_eml=-22;
 
-L_array= [0:10:100].*1e3;
+L_array= [0:5:100].*1e3;
 BER_array_2_5Gbps=zeros(1,length(L_array));
 for i=1:length(BER_array_2_5Gbps)
     
@@ -116,22 +116,51 @@ R=1;
 target_BER=1e-3;
 P_out_dbm=-19;
 
-L_array= [0:10:100].*1e3;
-BER_array_10Gbps=zeros(1,length(L_array));
+L_array= [0:5:100].*1e3;
+BER_arrayDCF_10Gbps=zeros(1,length(L_array));
 Fs=10e9;
-for i=1:length(BER_array_10Gbps)
+for i=1:length(BER_arrayDCF_10Gbps)
     
-    BER_array_10Gbps(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF);
+    BER_arrayDCF_10Gbps(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF);
 end
 figure( );
 
+semilogy(L_array/1e3,BER_arrayDCF_10Gbps,"-o",'LineWidth',3.0);
+hold on;
+semilogy(L_array/1e3,BER_array_10Gbps,"-o",'LineWidth',3.0);
+xlabel('fiber length (km)')
+ylabel('BER')
+title('Fiber propagation BER at 10Gbps versus fiber length'); 
+legend('with DCF','without DCF')
+grid on;
+hold off;
+
+%% Zero dispersion 
+D0=0;
+attenuation_0=0.35*log(10)/10;
+lambda0=1300e-9;
+beta2_0=0;
+beta3_0=S*lambda0^4/(4*pi^2*c^2);
+L_array= [0:5:100].*1e3;
+BER_array0_10Gbps=zeros(1,length(L_array));
+Fs=10e9;
+power_eml=-19;
+R=1;
+for i=1:length(BER_array0_10Gbps)
+    
+    BER_array0_10Gbps(i)=BER_Fiber_OOK(power_eml,R,Fs,attenuation_0,beta2_0,beta3_0,L_array(i));
+end
+figure( );
+semilogy(L_array/1e3,BER_array0_10Gbps,"-o",'LineWidth',3.0);
+hold on;
 semilogy(L_array/1e3,BER_array_10Gbps,"-o",'LineWidth',3.0);
 
 xlabel('fiber length (km)')
 ylabel('BER')
-title('Fiber propagation BER at 10Gbps with DCF versus fiber length'); 
-
+title('Fiber propagation BER at 10Gbps versus fiber length'); 
+legend('At 1300nm','At 1550nm')
 grid on;
 hold off;
+
 
 

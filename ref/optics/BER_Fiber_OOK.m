@@ -1,6 +1,6 @@
 function BER = BER_Fiber_OOK(power_eml,R,Fs,attenuation,beta2,beta3,L)
 
-att_dB=0.2*(L/1e3);
+att_dB=attenuation*(10/log(10))*(L/1e3);
 power_eml_amp = power_eml + att_dB;
 nb_err=0;
 X=randi([0,1],1,1e5); % generation des bits d'informations 
