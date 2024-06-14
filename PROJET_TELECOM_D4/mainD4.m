@@ -50,5 +50,7 @@ legend('zf','dfe')
 grid on;
 hold off;
 %%
-% decode and forward the basestation 80MHz
-%quantize and forward at 10 bits ==> 200MHz
+% decode and forward the basestation 80Mbps
+%quantize and forward frequence echantillonnage * nombre de bits * 2 voies
+%pour 16 QAm = 30*10*2=600Mbps
+
