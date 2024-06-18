@@ -7,7 +7,7 @@ No = Energy_symbol./10.^(SNR/10);
 
 nb_trames=floor(N/100);
 N_bits_trame = 100*log2(M); % nombre de bits dans une trame
-for ii = 1:length(SNR_bit) 
+parfor ii = 1:length(SNR_bit) 
     nb_err_tram=zeros(nb_trames,1);
     BERtram=zeros(nb_trames,1);
     for t=1:nb_trames

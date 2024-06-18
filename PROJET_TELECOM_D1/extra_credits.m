@@ -2,69 +2,10 @@ g1=[1,0,1,0,0,1];%g=x^5+x^2+1 de degre n-k=5
 k1=26;%k=31-5
 g2=[1,0,0,1,0,1,1,0,1,1,1];%g=x^10+x^9+x^8+x^6+x^5+x^3+1
 k2=31-10;
-Nb0=7000;
-Nb1=k1*100*2;
-Nb2=k2*100*3;
-H0=eye(100,100);
+Nb0=50000;
+Nb1=k1*100*20;
+Nb2=k2*100*5;
 
-[H1,H2,H3] =plot_channel(100);
-%%
-[SNR_bit,BER0] = BERvsSNR_Uncoded(Nb0,H1,"threshold detector",'PSK',2,0,10,1);
-[SNR_bit,BER1] = BERvsSNR_Code1(Nb1,k1,g1,H1,"threshold detector",'PSK',2,0,10,1);
-[SNR_bit,BER2] = BERvsSNR_Code2(Nb2,k2,g2,H1,"threshold detector",'PSK',2,0,10,1);
-
-figure();
-
-
-semilogy(SNR_bit,BER0,"-o",'LineWidth',3.0);
-hold on
-semilogy(SNR_bit,BER1,"-*",'LineWidth',3.0);
-semilogy(SNR_bit,BER2,"-x",'LineWidth',3.0)
-
-xlabel('Eb/No (in dB)')
-ylabel('BER')
-title('Channel 1 Empirical BER vs Eb/N0'); 
-legend('Uncoded','Code BCH 1',' Code BCH 2')
-grid on
-hold off
-%%
-[SNR_bit,BER0] = BERvsSNR_Uncoded(Nb0,H2,"threshold detector",'PSK',2,0,10,1);
-[SNR_bit,BER1] = BERvsSNR_Code1(Nb1,k1,g1,H2,"threshold detector",'PSK',2,0,10,1);
-[SNR_bit,BER2] = BERvsSNR_Code2(Nb2,k2,g2,H2,"threshold detector",'PSK',2,0,10,1);
-
-figure();
-
-
-semilogy(SNR_bit,BER1,"-o",'LineWidth',3.0);
-hold on
-
-semilogy(SNR_bit,BER2,"-x",'LineWidth',3.0)
-
-xlabel('Eb/No (in dB)')
-ylabel('BER')
-title('Channel 2 Empirical BER vs Eb/N0'); 
-legend('Uncoded','Code BCH 1','Code BCH 2')
-grid on
-hold off
-%%
-[SNR_bit,BER0] = BERvsSNR_Uncoded(Nb0,H3,"threshold detector",'PSK',2,0,10,1);
-[SNR_bit,BER1] = BERvsSNR_Code1(Nb1,k1,g1,H3,"threshold detector",'PSK',2,0,10,1);
-[SNR_bit,BER2] = BERvsSNR_Code2(Nb2,k2,g2,H3,"threshold detector",'PSK',2,0,10,1);
-
-figure();
-
-
-semilogy(SNR_bit,BER1,"-o",'LineWidth',3.0);
-hold on
-
-semilogy(SNR_bit,BER2,"-x",'LineWidth',3.0)
-
-xlabel('Eb/No (in dB)')
-ylabel('BER')
-title('Channel 3 Empirical BER vs Eb/N0'); 
-legend('Uncoded','Code BCH 1','Code BCH 2')
-grid on
-hold off
 %%
 [H1,H2,H3] =plot_channel(62);
 H0=eye(62,62);
@@ -126,7 +67,7 @@ parfor ii = 1:length(EsN0_dB)
     end 
     
     % Calculate throughput as the ratio of successful transmissions to total transmissions
-    throughput_BCH(ii) = successful_transmissions / nb_trames;
+    throughput_BCH(ii) = rate*log2(M)*successful_transmissions / nb_trames;
 end
 
 
@@ -177,7 +118,7 @@ for ii = 1:length(EsN0_dB)
      end 
     
     % Calculate throughput as the ratio of successful transmissions to total transmissions
-    throughput(ii) = successful_transmissions / nb_trames;
+    throughput(ii) = log2(M)*successful_transmissions / nb_trames;
 end
 
 %% Plot throughput vs Es/N0 BPSK
@@ -250,7 +191,7 @@ parfor ii = 1:length(EsN0_dB)
     end 
     
     % Calculate throughput as the ratio of successful transmissions to total transmissions
-    throughput_BCH(ii) = successful_transmissions / nb_trames;
+    throughput_BCH(ii) = rate*log2(M)*successful_transmissions / nb_trames;
 end
 %% ARQ retransmission Uncoded 8 QAM
 
@@ -299,7 +240,7 @@ for ii = 1:length(EsN0_dB)
      end 
     
     % Calculate throughput as the ratio of successful transmissions to total transmissions
-    throughput(ii) = successful_transmissions / nb_trames;
+    throughput(ii) = log2(M)*successful_transmissions / nb_trames;
 end
 
 %% Plot throughput vs Es/N0 8 QAM
@@ -373,7 +314,7 @@ parfor ii = 1:length(EsN0_dB)
     end 
     
     % Calculate throughput as the ratio of successful transmissions to total transmissions
-    throughput_BCH(ii) = successful_transmissions / nb_trames;
+    throughput_BCH(ii) = rate*log2(M)*successful_transmissions / nb_trames;
 end
 %% ARQ retransmission Uncoded 16 QAM
 
@@ -422,7 +363,7 @@ parfor ii = 1:length(EsN0_dB)
      end 
     
     % Calculate throughput as the ratio of successful transmissions to total transmissions
-    throughput(ii) = successful_transmissions / nb_trames;
+    throughput(ii) = log2(M)*successful_transmissions / nb_trames;
 end
 %% Plot throughput vs Es/N0 16 QAM
 figure;

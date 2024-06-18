@@ -12,7 +12,7 @@ nb_word=floor(N/k2);
 
 nb_trames=floor(nb_word/100);
 
-for ii = 1:length(SNR_bit) 
+parfor ii = 1:length(SNR_bit) 
     nb_err_tram=zeros(nb_trames,1);
     BERtram=zeros(nb_trames,1);
     for t=1:nb_trames
