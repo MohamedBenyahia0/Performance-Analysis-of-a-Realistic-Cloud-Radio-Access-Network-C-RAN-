@@ -108,20 +108,22 @@ hold off;
 
 %% Fiber DCF
 D_DCF=-80*10^(-6);%s/m/m
+lambda=1550e-9;
 attenuation_DCF=0.5*log(10)/10;
 beta2_DCF=-D_DCF*lambda^2/(2*pi*c);
 beta3_DCF=S*lambda^4/(4*pi^2*c^2);
-L_DCF=(-D/D_DCF)*100e3;
+
 R=1;
 target_BER=1e-3;
 P_out_dbm=-19;
 
 L_array= [0:5:100].*1e3;
+L_DCF=L_array.*(-D/D_DCF);
 BER_arrayDCF_10Gbps=zeros(1,length(L_array));
 Fs=10e9;
 for i=1:length(BER_arrayDCF_10Gbps)
     
-    BER_arrayDCF_10Gbps(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF);
+    BER_arrayDCF_10Gbps(i)=BER_Fiber_WithCompensation_OOK(P_out_dbm,R,Fs,target_BER,attenuation,beta2,beta3,L_array(i),beta2_DCF,beta3_DCF,attenuation_DCF,L_DCF(i));
 end
 figure( );
 

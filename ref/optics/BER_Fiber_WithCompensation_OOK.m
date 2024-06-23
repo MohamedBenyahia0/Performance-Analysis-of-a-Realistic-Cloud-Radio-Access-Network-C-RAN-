@@ -13,7 +13,7 @@ param_eml=make_emlaser('P_opt_dBm',power_eml_amp);
 [S_out, Ts_out, powerOfBlock] = TX_optical_eml(signal, Tsymb, param_eml);
 
 S_out_fiber=opticalFiber(S_out,1/Te,attenuation,beta2,beta3,L);
-S_out_fiber_DCF=opticalFiber(S_out_fiber,1/Ts_out,attenuation_DCF,beta2_DCF,beta3_DCF,L_DCF);
+S_out_fiber_DCF=opticalFiber(S_out_fiber,1/Te,attenuation_DCF,beta2_DCF,beta3_DCF,L_DCF);
 params_detector=make_photodetector('B_e',Fs,'sensitivity',R);
 
 N_opt=0; % optical noise spectral power density
