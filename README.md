@@ -1,6 +1,6 @@
 # Performance Analysis of a Realistic Cloud Radio Access Network (C-RAN)
 
-## Project Overview
+**Project Overview**
 This project focuses on the performance analysis of a **Cloud Radio Access Network (C-RAN)** with realistic constraints. It is divided into four key parts:
 
 - **D1: Simulation of the system with ideal hardware**  
@@ -19,7 +19,7 @@ This project focuses on the performance analysis of a **Cloud Radio Access Netwo
 This project was developed by:
 - **Mohamed Benyahia**
 - **Arthur Gastineau**
-- **Ker Che Tung**
+- **Ker Chee Tung**
 ## Tools & Technologies
 - **Simulation tools**:  MATLAB
 - **Programming languages**: Python 
